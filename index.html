@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mixh Hunts Scholars Programme – Application Portal</title>
+<meta name="description" content="Apply to the Mixh Hunts Scholars Programme online in five short steps.">
+<style>
+/* ===== Design tokens ===== */
+:root{
+  --navy:#0b2447; --blue:#dcebfb; --navy-2:#13376b; --sky:#e8f1fb; --sky-2:#cfe2f7; --accent:#2f7de1;
+  --ink:#16233b; --muted:#5b6b85; --line:#d9e2ef; --white:#fff; --ok:#1a8a5a; --err:#c93a3a;
+  --radius:16px; --shadow:0 10px 30px rgba(11,36,71,.10);
+  --serif:Georgia,"Times New Roman",serif; --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--sky);line-height:1.6}
+h1,h2,h3{font-family:var(--serif);color:var(--navy);line-height:1.2;margin:0 0 .5em}
+a{color:var(--accent)} :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.view{display:none}.view.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Header ===== */
+header.site{background:var(--blue);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy);font-family:var(--serif);font-weight:700;font-size:1.15rem}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--navy);display:grid;place-items:center}
+.logo svg{width:24px;height:24px}
+nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+nav a{display:block;padding:8px 12px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:500;transition:.2s}
+nav a:hover{background:var(--sky);color:var(--navy)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:1rem;cursor:pointer}
+@media(max-width:760px){
+  .menu-btn{display:block} nav{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-bottom:1px solid var(--line);padding:8px 20px 14px}
+  nav.open{display:block} nav ul{flex-direction:column}
+}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--navy);background:var(--navy);color:#fff;
+  padding:12px 24px;border-radius:12px;font:600 1rem var(--sans);cursor:pointer;text-decoration:none;transition:.2s}
+.btn:hover{background:var(--navy-2);border-color:var(--navy-2);transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn.ghost{background:transparent;color:var(--navy)} .btn.ghost:hover{background:var(--sky);color:var(--navy)}
+.btn.light{background:#fff;color:var(--navy);border-color:#fff} .btn.light:hover{background:var(--sky-2);border-color:var(--sky-2)}
+.btn.small{padding:6px 12px;font-size:.85rem;border-radius:9px}
+.btn.ok{background:var(--ok);border-color:var(--ok)} .btn.bad{background:var(--err);border-color:var(--err)}
+
+/* ===== Hero ===== */
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;padding:72px 0 80px}
+.hero h1{color:#fff;font-size:clamp(2rem,5vw,3.4rem);max-width:15em}
+.hero p{max-width:38em;font-size:1.1rem;color:#d6e4f8}
+.hero .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.deadline{display:inline-block;background:rgba(255,255,255,.12);padding:6px 14px;border-radius:99px;font-size:.9rem;margin-bottom:18px}
+section.block{padding:56px 0}
+section.block.white{background:#fff}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.card .ico{width:44px;height:44px;border-radius:12px;background:var(--sky);display:grid;place-items:center;margin-bottom:12px;font-size:1.3rem}
+.steps-list{counter-reset:s;list-style:none;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.steps-list li{counter-increment:s;background:var(--sky);border-radius:var(--radius);padding:18px}
+.steps-list li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;margin-bottom:8px}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:0 18px;transition:.2s}
+details[open]{box-shadow:var(--shadow)} summary{cursor:pointer;padding:14px 0;font-weight:600;color:var(--navy)}
+details p{margin:0 0 14px;color:var(--muted)}
+footer.site{background:var(--navy);color:#b9cbe6;padding:32px 0;font-size:.92rem}
+footer.site a{color:#fff}
+
+/* ===== Form ===== */
+.form-shell{max-width:780px;margin:32px auto;background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:clamp(20px,4vw,40px);border:1px solid var(--line)}
+.progress{margin-bottom:28px}
+.progress-track{height:8px;background:var(--sky-2);border-radius:9px;overflow:hidden}
+.progress-fill{height:100%;width:20%;background:linear-gradient(90deg,var(--accent),var(--navy));transition:width .4s ease}
+.stepper{display:flex;justify-content:space-between;list-style:none;padding:0;margin:14px 0 0;gap:4px}
+.stepper li{flex:1;text-align:center;font-size:.78rem;color:var(--muted)}
+.stepper .dot{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--sky);color:var(--navy);font-weight:700;margin:0 auto 4px;transition:.3s}
+.stepper li.active .dot{background:var(--navy);color:#fff} .stepper li.done .dot{background:var(--ok);color:#fff}
+.stepper li.active{color:var(--navy);font-weight:600}
+@media(max-width:560px){.stepper .lbl{display:none}}
+fieldset{border:0;padding:0;margin:0;display:none} fieldset.active{display:block;animation:fade .3s ease}
+legend{font:700 1.5rem var(--serif);color:var(--navy);margin-bottom:6px;padding:0}
+.hint{color:var(--muted);margin:0 0 20px;font-size:.95rem}
+.fields{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.full{grid-column:1/-1} @media(max-width:600px){.fields{grid-template-columns:1fr}}
+label,.lab{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+label .req{color:var(--err)}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink);transition:.2s}
+input:hover,select:hover,textarea:hover{border-color:var(--sky-2)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,125,225,.15)}
+input[type=file]{padding:10px;background:var(--sky);border-style:dashed}
+textarea{min-height:110px;resize:vertical}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--err)}
+.err{display:none;color:var(--err);font-size:.85rem;margin-top:4px}.field.invalid .err{display:block}
+.nav-row{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
+.review-sec{border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.review-sec h3{display:flex;justify-content:space-between;align-items:center;background:var(--sky);margin:0;padding:10px 16px;font-size:1.05rem}
+dl{margin:0;padding:6px 16px}.row{display:grid;grid-template-columns:200px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0} dt{color:var(--muted);font-size:.9rem} dd{margin:0;word-break:break-word}
+@media(max-width:560px){.row{grid-template-columns:1fr;gap:0}}
+.decl{display:flex;gap:10px;align-items:flex-start;background:var(--sky);padding:14px;border-radius:12px;margin-top:16px}
+.decl input{width:20px;height:20px;margin-top:3px;flex:none}
+.alert{background:#fdeeee;border:1px solid #f1c3c3;color:#8f2525;padding:10px 14px;border-radius:10px;margin-top:14px;display:none}
+
+/* ===== Confirmation & Admin ===== */
+.confirm{max-width:680px;margin:40px auto;text-align:center}
+.tick{width:76px;height:76px;border-radius:50%;background:var(--ok);color:#fff;font-size:2.4rem;display:grid;place-items:center;margin:0 auto 14px;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.2)}to{transform:scale(1)}}
+.refno{font:700 1.7rem var(--serif);letter-spacing:.04em;background:var(--sky);padding:12px 20px;border-radius:12px;display:inline-block;margin:10px 0}
+.admin-tools{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.admin-tools input,.admin-tools select{width:auto;flex:1;min-width:160px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:.92rem} th{background:var(--navy);color:#fff}
+.tbl{overflow-x:auto;border-radius:14px;box-shadow:var(--shadow)}
+.badge{padding:3px 10px;border-radius:99px;font-size:.8rem;font-weight:600;background:var(--sky-2);color:var(--navy)}
+.badge.Approved{background:#d5f2e3;color:#0f6b43}.badge.Rejected{background:#fbdcdc;color:#8f2525}.badge.Pending{background:#fff0c7;color:#7a5a00}
+.notice{background:#fff8e1;border:1px solid #f1dc9b;border-radius:12px;padding:12px 16px;font-size:.92rem;margin-bottom:12px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,40px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;opacity:0;transition:.35s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Print: only the summary ===== */
+@media print{
+  body{background:#fff} header.site,footer.site,.noprint,.toast{display:none!important}
+  .view{display:none!important}.view#view-confirm{display:block!important}
+  .card,.confirm{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#home" data-go="home" aria-label="Mixh Hunts Scholars Programme home">
+      <span class="logo" aria-hidden="true"><!-- LOGO PLACEHOLDER: replace with <img src="logo.png" alt="Organization logo"> -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9cc4f5" stroke-width="2"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 12v4c0 1.5 2.2 3 5 3s5-1.5 5-3v-4"/></svg></span>
+      Mixh Hunts Scholars
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">☰ Menu</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <ul>
+        <li><a href="#home" data-go="home">Home</a></li>
+        <li><a href="#requirements" data-go="home" data-scroll="requirements">Requirements</a></li>
+        <li><a href="#faq" data-go="home" data-scroll="faq">FAQs</a></li>
+        <li><a href="#contact" data-go="home" data-scroll="contact">Contact</a></li>
+        <li><a href="#track" data-go="track">Track application</a></li>
+        <li><a href="#admin" data-go="admin">Admin</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ================= HOME ================= -->
+<div class="view active" id="view-home">
+  <section class="hero">
+    <div class="wrap">
+      <span class="deadline">Applications are open for the 2027 intake</span>
+      <h1>Apply to the Mixh Hunts Scholars Programme</h1>
+      <p>Welcome. Complete a short five-step form, upload your documents, review everything, and submit. It takes about 15 minutes, and you will get a reference number to track your application.</p>
+      <div class="row"><button class="btn light" data-go="apply">Apply Now</button><a class="btn ghost" style="color:#fff;border-color:#9cc4f5" href="#requirements" data-go="home" data-scroll="requirements">See requirements</a></div>
+    </div>
+  </section>
+
+  <section class="block white"><div class="wrap">
+    <h2>How it works</h2>
+    <ol class="steps-list">
+      <li><b>Personal details</b><br>Who you are and how to reach you.</li>
+      <li><b>Education</b><br>Your qualification and institution.</li>
+      <li><b>Additional information</b><br>Category, motivation, emergency contact.</li>
+      <li><b>Documents</b><br>Upload photo, ID and certificates.</li>
+      <li><b>Review and submit</b><br>Check, edit and send.</li>
+    </ol>
+  </div></section>
+
+  <section class="block" id="requirements"><div class="wrap">
+    <h2>Application requirements</h2>
+    <div class="grid">
+      <div class="card"><div class="ico">🎓</div><h3>Qualification</h3><p>At least a secondary school certificate or equivalent. Graduates and final-year students may apply.</p></div>
+      <div class="card"><div class="ico">🪪</div><h3>Valid identification</h3><p>National ID, international passport, driver’s licence or voter’s card (PDF, JPG or PNG, max 2 MB).</p></div>
+      <div class="card"><div class="ico">📷</div><h3>Passport photograph</h3><p>Recent, plain background, JPG or PNG, max 2 MB.</p></div>
+      <div class="card"><div class="ico">📞</div><h3>Working contacts</h3><p>An active phone number, email address and one emergency contact.</p></div>
+    </div>
+  </div></section>
+
+  <section class="block white" id="faq"><div class="wrap">
+    <h2>Frequently asked questions</h2>
+    <details><summary>Can I save my application and finish later?</summary><p>This prototype keeps your progress only while the page is open. A connected backend can save drafts to your account.</p></details>
+    <details><summary>Is there an application fee?</summary><p>No fee is set in this prototype. Your organization can add a payment step later.</p></details>
+    <details><summary>What file types can I upload?</summary><p>PDF, JPG and PNG, up to 2 MB per file. The passport photograph must be JPG or PNG.</p></details>
+    <details><summary>How do I check my application status?</summary><p>Use “Track application” in the menu and enter your reference number.</p></details>
+    <details><summary>Can I edit my application after submitting?</summary><p>You can edit everything on the review step before you submit. After submission, contact the admissions office.</p></details>
+  </div></section>
+
+  <section class="block" id="contact"><div class="wrap">
+    <h2>Contact us</h2>
+    <div class="grid">
+      <div class="card"><h3>Email</h3><a href="mailto:admissions@example.org">admissions@example.org</a></div>
+      <div class="card"><h3>Phone</h3><a href="tel:+2340000000000">+234 000 000 0000</a></div>
+      <div class="card"><h3>Office</h3>12 Example Avenue, Victoria Island, Lagos</div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ================= APPLY ================= -->
+<div class="view" id="view-apply">
+  <div class="wrap">
+  <form class="form-shell" id="appForm" novalidate>
+    <div class="progress" aria-live="polite">
+      <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" id="pbar"><div class="progress-fill" id="pfill"></div></div>
+      <ol class="stepper" id="stepper"></ol>
+    </div>
+
+    <!-- STEP 1 -->
+    <fieldset data-step="1">
+      <legend>Personal information</legend><p class="hint">Use your details exactly as they appear on your ID.</p>
+      <div class="fields">
+        <div class="field full"><label for="fullName">Full name <span class="req">*</span></label><input id="fullName" name="fullName" autocomplete="name" required><div class="err"></div></div>
+        <div class="field"><label for="dob">Date of birth <span class="req">*</span></label><input type="date" id="dob" name="dob" required><div class="err"></div></div>
+        <div class="field"><label for="gender">Gender <span class="req">*</span></label><select id="gender" name="gender" required><option value="">Select</option><option>Female</option><option>Male</option><option>Prefer not to say</option></select><div class="err"></div></div>
+        <div class="field"><label for="nationality">Nationality <span class="req">*</span></label><input id="nationality" name="nationality" value="Nigerian" required><div class="err"></div></div>
+        <div class="field"><label for="phone">Phone number <span class="req">*</span></label><input type="tel" id="phone" name="phone" inputmode="tel" placeholder="e.g. 08012345678 or +2348012345678" required><div class="err"></div></div>
+        <div class="field full"><label for="email">Email address <span class="req">*</span></label><input type="email" id="email" name="email" autocomplete="email" required><div class="err"></div></div>
+        <div class="field full"><label for="address">Residential address <span class="req">*</span></label><textarea id="address" name="address" style="min-height:80px" required></textarea><div class="err"></div></div>
+        <div class="field"><label for="state">State <span class="req">*</span></label><select id="state" name="state" required></select><div class="err"></div></div>
+        <div class="field"><label for="lga">Local Government Area <span class="req">*</span></label><input id="lga" name="lga" required><div class="err"></div></div>
+      </div>
+    </fieldset>
+
+    <!-- STEP 2 -->
+    <fieldset data-step="2">
+      <legend>Educational information</legend><p class="hint">Tell us about your highest completed or current qualification.</p>
+      <div class="fields">
+        <div class="field"><label for="qualification">Highest qualification <span class="req">*</span></label><select id="qualification" name="qualification" required><option value="">Select</option><option>SSCE / WAEC / NECO</option><option>OND / NCE</option><option>HND</option><option>Bachelor’s degree</option><option>Master’s degree</option><option>Doctorate</option></select><div class="err"></div></div>
+        <div class="field"><label for="gradYear">Year of graduation <span class="req">*</span></label><input type="number" id="gradYear" name="gradYear" min="1970" max="2035" placeholder="e.g. 2024" required><div class="err"></div></div>
+        <div class="field full"><label for="institution">Name of institution <span class="req">*</span></label><input id="institution" name="institution" required><div class="err"></div></div>
+        <div class="field full"><label for="course">Course of study <span class="req">*</span></label><input id="course" name="course" required><div class="err"></div></div>
+        <div class="field full"><label for="certName">Educational certificates held <span class="req">*</span></label><input id="certName" name="certName" placeholder="e.g. B.Sc. Computer Science, WAEC" required><div class="err"></div></div>
+      </div>
+    </fieldset>
+
+    <!-- STEP 3 -->
+    <fieldset data-step="3">
+      <legend>Additional information</legend><p class="hint">Help us understand your goals and who to contact in an emergency.</p>
+      <div class="fields">
+        <div class="field full"><label for="category">Application category <span class="req">*</span></label><select id="category" name="category" required><option value="">Select</option><option>Undergraduate scholarship</option><option>Postgraduate scholarship</option><option>Vocational training</option><option>Internship</option></select><div class="err"></div></div>
+        <div class="field full"><label for="reason">Reason for applying <span class="req">*</span> <small>(at least 30 characters)</small></label><textarea id="reason" name="reason" required></textarea><div class="err"></div></div>
+        <div class="field full"><label for="experience">Previous experience <small>(optional)</small></label><textarea id="experience" name="experience"></textarea></div>
+        <div class="field"><label for="ecName">Emergency contact name <span class="req">*</span></label><input id="ecName" name="ecName" required><div class="err"></div></div>
+        <div class="field"><label for="ecRel">Relationship <span class="req">*</span></label><input id="ecRel" name="ecRel" required><div class="err"></div></div>
+        <div class="field"><label for="ecPhone">Emergency contact phone <span class="req">*</span></label><input type="tel" id="ecPhone" name="ecPhone" inputmode="tel" required><div class="err"></div></div>
+        <div class="field"><label for="ecEmail">Emergency contact email <small>(optional)</small></label><input type="email" id="ecEmail" name="ecEmail"><div class="err"></div></div>
+      </div>
+    </fieldset>
+
+    <!-- STEP 4 -->
+    <fieldset data-step="4">
+      <legend>Document upload</legend><p class="hint">PDF, JPG or PNG, up to 2 MB each. The passport photograph must be JPG or PNG.</p>
+      <div class="fields">
+        <div class="field full"><label for="f_passport">Passport photograph <span class="req">*</span></label><input type="file" id="f_passport" accept=".jpg,.jpeg,.png" data-req="1" data-img="1"><div class="err"></div></div>
+        <div class="field full"><label for="f_id">Identification document <span class="req">*</span></label><input type="file" id="f_id" accept=".pdf,.jpg,.jpeg,.png" data-req="1"><div class="err"></div></div>
+        <div class="field full"><label for="f_cert">Educational certificates <span class="req">*</span></label><input type="file" id="f_cert" accept=".pdf,.jpg,.jpeg,.png" data-req="1"><div class="err"></div></div>
+        <div class="field full"><label for="f_other">Other supporting documents <small>(optional)</small></label><input type="file" id="f_other" accept=".pdf,.jpg,.jpeg,.png"><div class="err"></div></div>
+      </div>
+    </fieldset>
+
+    <!-- STEP 5 -->
+    <fieldset data-step="5">
+      <legend>Review and submit</legend><p class="hint">Check your answers. Use “Edit” to change a section.</p>
+      <div id="reviewBox"></div>
+      <label class="decl" for="declare"><input type="checkbox" id="declare"><span>I declare that the information and documents I have provided are true and complete. I understand that false information may lead to disqualification.</span></label>
+      <div class="err" id="declErr" style="margin-top:6px">Tick the declaration to submit your application.</div>
+    </fieldset>
+
+    <div class="alert" id="alertBox" role="alert"></div>
+    <div class="nav-row">
+      <button type="button" class="btn ghost" id="prevBtn">← Previous</button>
+      <button type="button" class="btn" id="nextBtn">Next →</button>
+    </div>
+  </form>
+  </div>
+</div>
+
+<!-- ================= CONFIRMATION ================= -->
+<div class="view" id="view-confirm">
+  <div class="wrap"><div class="confirm card" id="confirmBox"></div></div>
+</div>
+
+<!-- ================= TRACK ================= -->
+<div class="view" id="view-track">
+  <div class="wrap" style="max-width:640px;padding-top:40px;padding-bottom:40px">
+    <div class="card">
+      <h2>Track your application</h2>
+      <div class="notice">Prototype: lookups search applications saved in this browser only. Replace with <code>Backend.getByRef()</code>.</div>
+      <label for="trackRef">Reference number</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><input id="trackRef" placeholder="e.g. MSP-2026-AB12CD" style="flex:1;min-width:200px"><button class="btn" id="trackBtn">Check status</button></div>
+      <div id="trackOut" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ADMIN (placeholder) ================= -->
+<div class="view" id="view-admin">
+  <div class="wrap" style="padding-top:32px;padding-bottom:48px">
+    <h2>Admin dashboard (placeholder)</h2>
+    <div class="notice"><b>Not secure.</b> This page has no real login and reads from this browser’s storage only. Before launch, protect it with real authentication and role-based rules (Firebase Auth / Supabase Auth + Row Level Security).</div>
+    <div class="grid" id="stats"></div>
+    <div class="admin-tools">
+      <input type="search" id="adminSearch" placeholder="Search by name, email or reference" aria-label="Search applicants">
+      <select id="adminFilter" aria-label="Filter by status"><option value="">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option></select>
+      <button class="btn small ghost" id="clearDemo">Clear demo data</button>
+    </div>
+    <div class="tbl"><table><thead><tr><th>Reference</th><th>Applicant</th><th>Category</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminRows"></tbody></table></div>
+  </div>
+</div>
+</main>
+
+<footer class="site"><div class="wrap">
+  © <span id="yr"></span> Mixh Hunts Scholars Programme. All rights reserved. · <a href="mailto:admissions@example.org">admissions@example.org</a>
+</div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   1. BACKEND ADAPTER  — the ONLY place that touches storage.
+   Default = browser localStorage (DEMO ONLY, not secure, not a database).
+   To go live, swap the methods below for Firebase/Supabase calls.
+
+   ---- Supabase example ----
+   const sb = supabase.createClient(URL, ANON_KEY);
+   submit:      await sb.from('applications').insert(app);           // + RLS: insert only
+   upload:      await sb.storage.from('documents').upload(path, file);
+   getByRef:    call a Postgres function/Edge Function that returns ONLY status
+   list/update: admin-only, protected by Supabase Auth + RLS policies
+
+   ---- Firebase example ----
+   await addDoc(collection(db,'applications'), app);  // Firestore rules: create-only for public
+   await uploadBytes(ref(storage,`documents/${refNo}/${name}`), file);
+   ===================================================================== */
+const Backend = {
+  KEY: "msp_demo_applications",
+  _read(){ try{ return JSON.parse(localStorage.getItem(this.KEY)) || []; }catch(e){ return []; } },
+  _write(list){ try{ localStorage.setItem(this.KEY, JSON.stringify(list)); }catch(e){} },
+  async submit(app){ const l=this._read(); l.unshift(app); this._write(l); return app; },        // TODO: insert into applicants DB
+  async uploadFile(refNo, file){ return { name:file.name, size:file.size, url:null }; },         // TODO: upload to storage, return URL
+  async getByRef(ref){ return this._read().find(a=>a.refNo===ref.trim().toUpperCase()) || null; }, // TODO: status-only lookup
+  async list(){ return this._read(); },                                                          // TODO: admin-only query
+  async setStatus(refNo, status){ const l=this._read(); const a=l.find(x=>x.refNo===refNo); if(a){a.status=status; a.updated=new Date().toISOString();} this._write(l); }, // TODO: admin-only update
+  async clear(){ this._write([]); }
+};
+
+/* =====================================================================
+   2. HELPERS
+   ===================================================================== */
+const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2800); }
+$("#yr").textContent = new Date().getFullYear();
+
+const STATES = ["Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno","Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT (Abuja)","Gombe","Imo","Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara","Outside Nigeria"];
+$("#state").innerHTML = '<option value="">Select state</option>' + STATES.map(s=>`<option>${s}</option>`).join("");
+
+/* =====================================================================
+   3. VIEW ROUTER (hash-free simple router)
+   ===================================================================== */
+function go(view, scrollId){
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  $("#view-"+view).classList.add("active");
+  $("#mainNav").classList.remove("open"); $("#menuBtn").setAttribute("aria-expanded","false");
+  if(view==="apply") showStep(step);
+  if(view==="admin") renderAdmin();
+  if(scrollId) setTimeout(()=>$("#"+scrollId).scrollIntoView({behavior:"smooth"}),60); else window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-go]"); if(!a) return;
+  e.preventDefault(); go(a.dataset.go, a.dataset.scroll);
+});
+$("#menuBtn").addEventListener("click",()=>{ const o=$("#mainNav").classList.toggle("open"); $("#menuBtn").setAttribute("aria-expanded",o); });
+
+/* =====================================================================
+   4. MULTI-STEP FORM
+   ===================================================================== */
+const STEPS = ["Personal","Education","Additional","Documents","Review"];
+const form = $("#appForm"); let step = 1; const files = {};
+$("#stepper").innerHTML = STEPS.map((s,i)=>`<li data-i="${i+1}"><span class="dot">${i+1}</span><span class="lbl">${s}</span></li>`).join("");
+
+function showStep(n){
+  step = n;
+  $$("fieldset").forEach(f=>f.classList.toggle("active", +f.dataset.step===n));
+  $$("#stepper li").forEach(li=>{ const i=+li.dataset.i; li.classList.toggle("active",i===n); li.classList.toggle("done",i<n); li.querySelector(".dot").textContent = i<n?"✓":i; });
+  const pct = n*20; $("#pfill").style.width=pct+"%"; $("#pbar").setAttribute("aria-valuenow",pct);
+  $("#prevBtn").style.visibility = n===1?"hidden":"visible";
+  const nb=$("#nextBtn"); nb.textContent = n===5?"Submit application":"Next →"; nb.classList.toggle("ok",n===5);
+  if(n===5) renderReview();
+  $("#alertBox").style.display="none";
+  form.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ---------- Validation ---------- */
+const RX = { email:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, phone:/^(?:\+?234|0)[789][01]\d{8}$|^\+?[1-9]\d{7,14}$/ };
+function setErr(el,msg){ const f=el.closest(".field"); if(!f) return; f.classList.toggle("invalid",!!msg); const e=$(".err",f); if(e) e.textContent=msg||""; return !msg; }
+function checkField(el){
+  const v = el.value.trim(), name=el.name, label=($(`label[for=${el.id}]`)?.childNodes[0]?.textContent||"This field").trim().toLowerCase();
+  if(el.required && !v) return setErr(el,`Enter your ${label}.`);
+  if(!v) return setErr(el,"");
+  if(el.type==="email" && !RX.email.test(v)) return setErr(el,"Enter a valid email address, like name@example.com.");
+  if(el.type==="tel" && !RX.phone.test(v.replace(/[\s-]/g,""))) return setErr(el,"Enter a valid phone number, like 08012345678 or +2348012345678.");
+  if(name==="dob"){ const d=new Date(v), age=(Date.now()-d)/31557600000; if(isNaN(d)||age<15||age>100) return setErr(el,"Enter a valid date of birth. Applicants must be at least 15 years old."); }
+  if(name==="gradYear" && (v<1970||v>2035)) return setErr(el,"Enter a year between 1970 and 2035.");
+  if(name==="reason" && v.length<30) return setErr(el,`Write at least 30 characters (${v.length} so far).`);
+  return setErr(el,"");
+}
+function checkFile(el){
+  const f=files[el.id];
+  if(!f) return setErr(el, el.dataset.req ? "Upload this document to continue." : "");
+  if(f.size>2*1024*1024) return setErr(el,"This file is larger than 2 MB. Choose a smaller file.");
+  const ext=f.name.split(".").pop().toLowerCase(), ok = el.dataset.img?["jpg","jpeg","png"]:["pdf","jpg","jpeg","png"];
+  if(!ok.includes(ext)) return setErr(el,`Unsupported file type. Use ${ok.join(", ").toUpperCase()}.`);
+  return setErr(el,"");
+}
+function validateStep(n){
+  const fs=$(`fieldset[data-step="${n}"]`); let ok=true, first=null;
+  $$("input:not([type=file]),select,textarea",fs).forEach(el=>{ if(!checkField(el)){ ok=false; first=first||el; } });
+  $$("input[type=file]",fs).forEach(el=>{ if(!checkFile(el)){ ok=false; first=first||el; } });
+  if(!ok){ first.focus(); const a=$("#alertBox"); a.textContent="Some fields need attention. Fix the highlighted items to continue."; a.style.display="block"; }
+  return ok;
+}
+form.addEventListener("blur",e=>{ if(e.target.matches("input:not([type=file]),select,textarea")) checkField(e.target); },true);
+form.addEventListener("change",e=>{
+  if(e.target.type==="file"){ files[e.target.id]=e.target.files[0]||null; checkFile(e.target); }
+});
+
+$("#prevBtn").onclick=()=>showStep(step-1);
+$("#nextBtn").onclick=()=>{
+  if(step<5){ if(validateStep(step)) showStep(step+1); return; }
+  // Final gate: re-validate EVERY step so incomplete applications cannot be submitted
+  for(let i=1;i<=4;i++){ if(!validateStep(i)){ showStep(i); validateStep(i); return; } }
+  if(!$("#declare").checked){ $("#declErr").style.display="block"; $("#declare").focus(); return; }
+  submitApplication();
+};
+$("#declare").addEventListener("change",()=>$("#declErr").style.display="none");
+
+/* ---------- Review ---------- */
+const SECTIONS = [
+  [1,"Personal information",[["fullName","Full name"],["dob","Date of birth"],["gender","Gender"],["nationality","Nationality"],["phone","Phone"],["email","Email"],["address","Address"],["state","State"],["lga","LGA"]]],
+  [2,"Educational information",[["qualification","Highest qualification"],["institution","Institution"],["course","Course of study"],["gradYear","Graduation year"],["certName","Certificates held"]]],
+  [3,"Additional information",[["category","Category"],["reason","Reason for applying"],["experience","Previous experience"],["ecName","Emergency contact"],["ecRel","Relationship"],["ecPhone","Contact phone"],["ecEmail","Contact email"]]],
+  [4,"Documents",[["f_passport","Passport photograph"],["f_id","Identification"],["f_cert","Certificates"],["f_other","Other documents"]]]
+];
+function getData(){
+  const d={}; $$("input:not([type=file]):not([type=checkbox]),select,textarea",form).forEach(el=>d[el.name]=el.value.trim());
+  Object.keys(files).forEach(k=>d[k]=files[k]?files[k].name:""); return d;
+}
+function renderReview(){
+  const d=getData();
+  $("#reviewBox").innerHTML = SECTIONS.map(([n,title,rows])=>`
+   <section class="review-sec"><h3>${title}<button type="button" class="btn small ghost" data-edit="${n}">Edit</button></h3>
+   <dl>${rows.map(([k,l])=>`<div class="row"><dt>${l}</dt><dd>${esc(d[k])||"—"}</dd></div>`).join("")}</dl></section>`).join("");
+  $$("[data-edit]").forEach(b=>b.onclick=()=>showStep(+b.dataset.edit));
+}
+
+/* ---------- Submit ---------- */
+function makeRef(){ const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s=""; const a=crypto.getRandomValues(new Uint8Array(6)); a.forEach(x=>s+=c[x%c.length]); return `MSP-${new Date().getFullYear()}-${s}`; }
+async function submitApplication(){
+  const btn=$("#nextBtn"); btn.disabled=true; btn.textContent="Submitting…";
+  try{
+    const refNo=makeRef(), data=getData();
+    const docs={}; for(const k of Object.keys(files)){ if(files[k]) docs[k]=await Backend.uploadFile(refNo,files[k]); }
+    const app={ refNo, status:"Pending", submitted:new Date().toISOString(), data, documents:docs };
+    await Backend.submit(app);
+    showConfirmation(app); toast("Application submitted successfully");
+    form.reset(); Object.keys(files).forEach(k=>delete files[k]);
+  }catch(err){ const a=$("#alertBox"); a.textContent="We could not submit your application. Check your connection and try again."; a.style.display="block"; }
+  btn.disabled=false;
+}
+function showConfirmation(app){
+  const d=app.data;
+  $("#confirmBox").innerHTML = `
+    <div class="tick" aria-hidden="true">✓</div>
+    <h2>Application submitted</h2>
+    <p>Thank you, ${esc(d.fullName.split(" ")[0])}. Keep your reference number to track your application.</p>
+    <div class="refno">${esc(app.refNo)}</div>
+    <p style="color:var(--muted)">Submitted ${new Date(app.submitted).toLocaleString()} · Status: <span class="badge Pending">Pending</span></p>
+    <dl style="text-align:left;margin:18px 0">${[["Name",d.fullName],["Email",d.email],["Phone",d.phone],["Category",d.category],["Institution",d.institution]].map(([l,v])=>`<div class="row"><dt>${l}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+    <div class="noprint" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" onclick="window.print()">Print summary</button>
+      <button class="btn ghost" data-go="home">Back to home</button>
+    </div>`;
+  go("confirm");
+}
+
+/* =====================================================================
+   5. TRACKING (placeholder)
+   ===================================================================== */
+$("#trackBtn").onclick=async()=>{
+  const ref=$("#trackRef").value.trim(); const out=$("#trackOut");
+  if(!ref){ out.innerHTML='<p style="color:var(--err)">Enter your reference number.</p>'; return; }
+  const a=await Backend.getByRef(ref);
+  out.innerHTML = a ? `<div class="card"><b>${esc(a.refNo)}</b><br>Applicant: ${esc(a.data.fullName)}<br>Status: <span class="badge ${a.status}">${a.status}</span><br><small>Submitted ${new Date(a.submitted).toLocaleDateString()}</small></div>`
+                    : '<p style="color:var(--err)">No application found with that reference number. Check it and try again.</p>';
+};
+
+/* =====================================================================
+   6. ADMIN DASHBOARD (placeholder — needs real auth before launch)
+   ===================================================================== */
+async function renderAdmin(){
+  const all=await Backend.list(), q=$("#adminSearch").value.toLowerCase(), f=$("#adminFilter").value;
+  const list=all.filter(a=>(!f||a.status===f)&&(!q||[a.refNo,a.data.fullName,a.data.email].join(" ").toLowerCase().includes(q)));
+  const c=s=>all.filter(a=>a.status===s).length;
+  $("#stats").innerHTML=[["Total",all.length],["Pending",c("Pending")],["Approved",c("Approved")],["Rejected",c("Rejected")]].map(([l,n])=>`<div class="card"><div style="font:700 2rem var(--serif);color:var(--navy)">${n}</div>${l}</div>`).join("");
+  $("#adminRows").innerHTML = list.length ? list.map(a=>`<tr>
+     <td>${esc(a.refNo)}</td><td>${esc(a.data.fullName)}<br><small>${esc(a.data.email)}</small></td><td>${esc(a.data.category)}</td>
+     <td>${new Date(a.submitted).toLocaleDateString()}</td><td><span class="badge ${a.status}">${a.status}</span></td>
+     <td><button class="btn small ok" data-st="Approved" data-ref="${a.refNo}">Approve</button> <button class="btn small bad" data-st="Rejected" data-ref="${a.refNo}">Reject</button> <button class="btn small ghost" data-st="Pending" data-ref="${a.refNo}">Reset</button></td></tr>`).join("")
+     : '<tr><td colspan="6" style="text-align:center;color:var(--muted)">No applications yet. Submit one from “Apply Now” and it will appear here.</td></tr>';
+}
+$("#adminSearch").oninput=renderAdmin; $("#adminFilter").onchange=renderAdmin;
+$("#adminRows").addEventListener("click",async e=>{ const b=e.target.closest("[data-st]"); if(!b) return; await Backend.setStatus(b.dataset.ref,b.dataset.st); toast("Status updated: "+b.dataset.st); renderAdmin(); });
+$("#clearDemo").onclick=async()=>{ if(confirm("Delete all demo applications stored in this browser?")){ await Backend.clear(); renderAdmin(); } };
+
+showStep(1);
+</script>
+</body>
+</html>
